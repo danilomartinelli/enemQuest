@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status, Depends
 
+from app.dtos.ranking_response_dto import RankingResponseDto
 from app.models.user import UserSchema
 from app.services.user_service import UserService
 from app.repositories.user_repository import UserRepository
