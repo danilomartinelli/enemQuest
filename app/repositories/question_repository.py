@@ -26,3 +26,6 @@ class QuestionRepository:
 
     def list_questions(self, offset: int, limit: int) -> list:
         return list(self.collection.find().skip(offset).limit(limit))
+
+    def count_questions(self) -> int:
+        return self.collection.count_documents({})

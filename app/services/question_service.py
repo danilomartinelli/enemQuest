@@ -11,9 +11,11 @@ class QuestionService:
         new_question = self.repo.create_question(question_data)
         return QuestionAnswerMapper.map_question(new_question)
 
-    def get_all_questions(self, offset: int, limit: int) -> List[dict]:
+    def get_all_questions(self, offset: int, limit: int) -> (List[dict], int):
         questions = self.repo.list_questions(offset, limit)
-        return [QuestionAnswerMapper.map_question(question) for question in questions]
+        total = self.repo.count_questions()
+
+        return [QuestionAnswerMapper.map_question(question) for question in questions], total
 
     def get_question_by_id(self, question_id: str) -> dict:
         question = self.repo.get_question_by_id(question_id)
