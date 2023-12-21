@@ -3,6 +3,7 @@ import os
 from pymongo import MongoClient
 
 from app.repositories.question_repository import QuestionRepository
+from app.repositories.user_repository import UserRepository
 
 
 def get_db_connection():
@@ -14,3 +15,8 @@ def get_db_connection():
 def get_question_repository():
     db = get_db_connection()
     return QuestionRepository(db)
+
+
+def get_user_repository():
+    db = get_db_connection()
+    return UserRepository(db)

@@ -1,9 +1,9 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends, Header
 
+from app.dtos.question_answer_request_dto import QuestionAnswerRequestDto
 from app.dtos.question_answer_response_dto import QuestionAnswerResponseDto
 from app.models.question import QuestionSchema
-from app.models.user_answer import UserAnswerSchema
 from app.services.question_service import QuestionService
 from app.repositories.question_repository import QuestionRepository
 from app.database import get_question_repository
@@ -40,7 +40,7 @@ async def read_question(question_id: str, service: QuestionService = Depends(get
 @router.put("/questions/{question_id}", response_model=QuestionSchema)
 async def update_question(question_id: str, question_update: QuestionSchema,
                           service: QuestionService = Depends(get_service)):
-    updated_question = service.update_question(question_id, question_update.dict())
+    updated_question = service.update_question(question_id, question_update.model_dump())
     if updated_question is None:
         raise HTTPException(status_code=404, detail="Question not found")
     return updated_question
@@ -52,14 +52,3 @@ async def delete_question(question_id: str, service: QuestionService = Depends(g
     if not success:
         raise HTTPException(status_code=404, detail="Question not found")
     return {"message": "Question deleted successfully"}
-
-
-@router.post("/questions/{question_id}/answer", response_model=QuestionAnswerResponseDto)
-async def answer_question(question_id: str, user_answer: UserAnswerSchema,
-                          service: QuestionService = Depends(get_service)):
-    question = service.get_question_by_id(question_id)
-    if question is None:
-        raise HTTPException(status_code=404, detail="Question not found")
-
-    is_correct = question['correctAnswer'] == user_answer.answer
-    return {"correct": is_correct}

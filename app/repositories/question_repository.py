@@ -14,10 +14,10 @@ class QuestionRepository:
         oid = ObjectId(question_id)
         return self.collection.find_one({'_id': oid})
 
-    def update_question(self, question_id: str, update_data: dict) -> bool:
+    def update_question(self, question_id: str, update_data: dict) -> dict:
         oid = ObjectId(question_id)
-        result = self.collection.update_one({'_id': oid}, {'$set': update_data})
-        return result.modified_count > 0
+        self.collection.update_one({'_id': oid}, {'$set': update_data})
+        return self.collection.find_one({'_id': oid})
 
     def delete_question(self, question_id: str) -> bool:
         oid = ObjectId(question_id)
