@@ -24,5 +24,5 @@ class QuestionRepository:
         result = self.collection.delete_one({'_id': oid})
         return result.deleted_count > 0
 
-    def list_questions(self) -> list:
-        return list(self.collection.find())
+    def list_questions(self, offset: int, limit: int) -> list:
+        return list(self.collection.find().skip(offset).limit(limit))

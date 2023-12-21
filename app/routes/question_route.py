@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status, Depends, Header
+from fastapi import APIRouter, HTTPException, status, Depends, Header, Query
 
 from app.dtos.question_answer_request_dto import QuestionAnswerRequestDto
 from app.dtos.question_answer_response_dto import QuestionAnswerResponseDto
@@ -24,8 +24,13 @@ async def create_question(question: QuestionSchema, service: QuestionService = D
 
 
 @router.get("/questions/", response_model=List[QuestionSchema])
-async def read_all_questions(service: QuestionService = Depends(get_service)):
-    questions = service.get_all_questions()
+async def read_all_questions(service: QuestionService = Depends(get_service),
+                             page: int = Query(1, description="Page number", ge=1),
+                             items_per_page: int = Query(10, description="Items per page", ge=1)):
+    offset = (page - 1) * items_per_page
+
+    questions = service.get_all_questions(offset, items_per_page)
+
     return questions
 
 

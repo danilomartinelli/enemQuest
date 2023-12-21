@@ -11,8 +11,8 @@ class QuestionService:
         new_question = self.repo.create_question(question_data)
         return QuestionAnswerMapper.map_question(new_question)
 
-    def get_all_questions(self) -> List[dict]:
-        questions = self.repo.list_questions()
+    def get_all_questions(self, offset: int, limit: int) -> List[dict]:
+        questions = self.repo.list_questions(offset, limit)
         return [QuestionAnswerMapper.map_question(question) for question in questions]
 
     def get_question_by_id(self, question_id: str) -> dict:
