@@ -52,3 +52,15 @@ async def delete_question(question_id: str, service: QuestionService = Depends(g
     if not success:
         raise HTTPException(status_code=404, detail="Question not found")
     return {"message": "Question deleted successfully"}
+
+
+@router.post("/questions/{question_id}/answer", response_model=QuestionAnswerResponseDto)
+async def answer_question(
+        question_id: str,
+        user_answer: QuestionAnswerRequestDto,
+        user_id: str = Header(..., description="User ID"),
+        service: QuestionService = Depends(get_service)
+):
+    is_correct, new_score = service.answer_question(question_id, user_id, user_answer.answer)
+
+    return {"correct": is_correct, "new_score": new_score}
